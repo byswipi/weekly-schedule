@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="id"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Jadwal Mingguan</title>
+<style>
+:root{--bg:#f2f2f7;--card:#fff;--tx:#000;--mu:#8e8e93;--bd:rgba(60,60,67,.16);--fill:rgba(118,118,128,.12);--ac:#007aff;--ok:#007aff;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#000;--card:#1c1c1e;--tx:#fff;--bd:rgba(84,84,88,.55);--fill:rgba(118,118,128,.24);--ac:#0a84ff;--ok:#0a84ff}}
+:root[data-theme="dark"]{--bg:#000;--card:#1c1c1e;--tx:#fff;--bd:rgba(84,84,88,.55);--fill:rgba(118,118,128,.24);--ac:#0a84ff;--ok:#0a84ff}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{margin:0;background:var(--bg);color:var(--tx);font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text","Helvetica Neue",system-ui,sans-serif;line-height:1.35;padding-bottom:90px;font-size:17px}
+.w{max-width:640px;margin:0 auto;padding:14px 16px}
+.sub{color:var(--mu);font-size:13px;text-transform:uppercase;letter-spacing:.3px;margin-top:6px}
+h1{font-size:34px;margin:2px 0 12px;letter-spacing:.3px;font-weight:700}
+button{font:inherit;font-size:15px;border:0;background:none;color:var(--ac);padding:6px 4px;cursor:pointer}
+.stat{color:var(--mu);font-size:15px;margin-bottom:8px}
+.pb{height:4px;background:var(--fill);border-radius:4px;overflow:hidden;margin-bottom:22px}.pb i{display:block;height:100%;background:var(--ac);border-radius:4px;transition:width .3s}
+.day,.sec{background:var(--card);border-radius:14px;padding:12px 16px 4px;margin-bottom:20px}
+.dh{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:2px}.dh b,.sec h2{font-size:20px;font-weight:600}
+.tag{font-size:13px;color:var(--ac)}
+.blk{border-top:.5px solid var(--bd)}
+.bt{display:flex;align-items:center;gap:12px;padding:12px 0}
+input[type=checkbox]{-webkit-appearance:none;appearance:none;width:24px;height:24px;border:1.5px solid var(--mu);border-radius:50%;flex:none;margin:0;position:relative;background:none}
+input[type=checkbox]:checked{background:var(--ac);border-color:var(--ac)}
+input[type=checkbox]:checked::after{content:"";position:absolute;left:7px;top:3px;width:6px;height:11px;border:solid #fff;border-width:0 2px 2px 0;transform:rotate(45deg)}
+.g{flex:1;min-width:0}.nm{font-size:17px}.tm{font-size:13px;color:var(--mu)}
+.blk.done .nm{color:var(--mu);text-decoration:line-through}
+.blk.now .tm{color:var(--ac)}
+.cnt{color:var(--mu);font-size:15px}
+.tl{padding:0 0 10px 36px}
+.ti{display:flex;align-items:center;gap:10px;padding:8px 0;border-top:.5px solid var(--bd);font-size:16px}
+.ti input{width:20px;height:20px}.ti input:checked::after{left:5px;top:2px;width:5px;height:9px}
+.ti span{flex:1;word-break:break-word}.ti.d span{color:var(--mu);text-decoration:line-through}
+.x{color:var(--mu);font-size:18px;padding:2px 6px}
+.add{display:flex;gap:8px;margin-top:8px}
+.add input{flex:1;min-width:0;font:inherit;font-size:16px;padding:8px 12px;border-radius:10px;border:0;background:var(--fill);color:var(--tx);outline:none}
+.add button{background:var(--ac);color:#fff;width:34px;height:34px;border-radius:50%;padding:0;font-size:20px;line-height:1}
+.st{background:var(--fill);color:var(--tx);width:32px;height:32px;border-radius:50%;padding:0;font-size:20px;line-height:1;flex:none}.ti .pb{margin:6px 0 2px;height:3px}.ti.cn.d .nm2{color:var(--mu)}
+.em{color:var(--mu);font-size:15px;padding:4px 0}
+.wk{text-align:center;color:var(--mu);background:none;font-size:15px;padding:8px}
+.ed{display:none;gap:8px;flex-wrap:wrap;align-items:center;padding:10px 0}
+body.edit .ed{display:flex}body.edit .bt,body.edit .tl{display:none}
+select,input[type=time]{font:inherit;font-size:15px;padding:6px 8px;border-radius:8px;border:0;background:var(--fill);color:var(--tx)}
+.act{display:flex;gap:16px;margin-bottom:14px}
+.sec h2{display:flex;justify-content:space-between;align-items:baseline;margin:0 0 4px}.sec h2 span{font-size:13px;color:var(--mu);font-weight:400}
+.sk label{display:flex;gap:12px;padding:10px 0;font-size:17px;align-items:center;border-top:.5px solid var(--bd)}
+.nav{position:fixed;left:0;right:0;bottom:0;display:flex;justify-content:space-around;padding:8px 10px calc(8px + env(safe-area-inset-bottom,0px));background:color-mix(in srgb,var(--card) 82%,transparent);-webkit-backdrop-filter:blur(20px);backdrop-filter:blur(20px);border-top:.5px solid var(--bd)}
+.nav button{flex:1;color:var(--mu);font-size:13px;font-weight:500;padding:8px 0}
+.nav button.on{color:var(--ac)}
+.nt{padding:6px 0 10px;border-top:.5px solid var(--bd)}.nt summary{color:var(--mu);font-size:15px;cursor:pointer}
+.nt textarea,#bk,#im{width:100%;font:inherit;font-size:15px;padding:10px;border:0;border-radius:10px;background:var(--fill);color:var(--tx);margin-top:8px;resize:vertical}
+.nt a{display:block;color:var(--ac);font-size:14px;padding:4px 0;text-decoration:none}
+pre{white-space:pre-wrap;font:13px ui-monospace,Menlo,monospace;background:var(--fill);padding:12px;border-radius:10px;margin:8px 0}
+</style></head><body><div class="w">
+<div class="sub" id="sub"></div><h1>Jadwal</h1>
+<div id="app"></div></div>
+<div class="nav"><button data-v="today">Hari ini</button><button data-v="week">Minggu</button><button data-v="tasks">Tugas</button><button data-v="recap">Rekap</button></div>
+<script>
+const COL=new Proxy({},{get:()=>"var(--ac)"});
+const NAMES=["Bintang Florist Express","alvaagency.ai","Tayyib & Co.","Alvadespro","Privee Bag","rapihin.skripsi","Skripsi cawpiaw"],DAYS=["Senin","Selasa","Rabu","Kamis","Jumat"];
+const B=NAMES,DEF=[
+[{n:B[0],s:"09:00",e:"12:00"},{n:B[1],s:"13:00",e:"17:00"}],
+[{n:B[2],s:"09:00",e:"12:00"},{n:B[4],s:"13:00",e:"17:00"}],
+[{n:B[3],s:"09:00",e:"12:00"},{n:B[5],s:"13:00",e:"17:00"}],
+[{n:B[0],s:"09:00",e:"12:00"},{n:B[6],s:"13:00",e:"17:00"}],
+[{n:B[1],s:"09:00",e:"12:00"},{n:B[2],s:"13:00",e:"17:00"}]];
+const CH=["Bab 1 – Pendahuluan","Bab 2 – Tinjauan Pustaka","Bab 3 – Metodologi","Bab 4 – Hasil & Pembahasan","Bab 5 – Kesimpulan","Revisi & Daftar Pustaka"];
+let sch=DEF,done={},todos={},chap={},view="today",open={},edit=false,fb=null;
+let focus={},notes={},timer=null;
+const wk=(()=>{const d=new Date();d.setDate(d.getDate()-((d.getDay()+6)%7));return d.toISOString().slice(0,10)})();
+const $=id=>document.getElementById(id);
+const esc=s=>s.replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const mins=t=>{const[a,b]=t.split(":");return +a*60+ +b};
+function ld(){try{const g=k=>JSON.parse(localStorage.getItem(k)||"null");const xx=g("jm_x")||{};focus=xx.f||{};notes=xx.n||{};timer=xx.tm||null;const bb=g("jm_b");if(bb){NAMES.length=0;bb.forEach(x=>NAMES.push(x))}sch=g("jm_s2")||sch;const d=g("jm_d2");if(d&&d.w===wk)done=d.d;todos=g("jm_t")||{};Object.values(todos).forEach(a=>a.forEach(x=>{if(x.n){const m=dk().slice(0,7);if(x.mo&&x.mo!==m){x.c=0;x.l={};x.d=false}x.mo=m}}));chap=g("jm_c")||{}}catch(e){}}
+function sv(){try{localStorage.setItem("jm_x",JSON.stringify({f:focus,n:notes,tm:timer}));localStorage.setItem("jm_b",JSON.stringify(NAMES));localStorage.setItem("jm_s2",JSON.stringify(sch));localStorage.setItem("jm_d2",JSON.stringify({w:wk,d:done}));localStorage.setItem("jm_t",JSON.stringify(todos));localStorage.setItem("jm_c",JSON.stringify(chap))}catch(e){}}
+const L=n=>todos[n]||(todos[n]=[]);
+function tl(n,extra){
+ const bi=NAMES.indexOf(n),l=L(n);
+ return `<div class="tl" style="--c:${COL[n]}">${l.length?l.map((x,i)=>x.n?`<div class="ti cn ${x.d?"d":""}"><div class="g"><div>${esc(x.t)}</div><div class="tm">${x.c}/${x.n} bulan ini · minggu ini ${wc(x)} · hari ini ${(x.l&&x.l[dk()])||0}</div><div class="pb"><i style="width:${Math.min(100,x.c/x.n*100)}%"></i></div></div><button class="st" onclick="cn(${bi},${i},-1)">−</button><button class="st" onclick="cn(${bi},${i},1)">+</button><button class="x" onclick="tx(${bi},${i})">✕</button></div>`:`<div class="ti ${x.d?"d":""}"><input type="checkbox" ${x.d?"checked":""} onchange="tt(${bi},${i})"><span>${esc(x.t)}</span><button class="x" onclick="tx(${bi},${i})">✕</button></div>`).join(""):'<div class="em">Belum ada tugas. Tambah yang pertama 👇</div>'}<div class="add" style="--c:${COL[n]}"><input data-bi="${bi}" placeholder="Tambah tugas, mis. 6x post IG" onkeydown="if(event.key==='Enter')at(${bi},this)"><button onclick="at(${bi},this.parentNode.firstChild)">+</button></div></div>`}
+function blk(i,j,b,alwaysOpen){
+ const k=i+"-"+j,ck=done[k],now=new Date(),live=i==(now.getDay()+6)%7&&now.getHours()*60+now.getMinutes()>=mins(b.s)&&now.getHours()*60+now.getMinutes()<mins(b.e);
+ const l=L(b.n),op=l.filter(x=>!x.d).length,o=alwaysOpen||open[k];
+ return `<div class="blk ${ck?"done":""} ${live?"now":""}" style="--c:${COL[b.n]}"><div class="bt"><input type="checkbox" ${ck?"checked":""} onchange="tg('${k}')"><div class="g"><div class="nm">${esc(b.n)}</div><div class="tm">${b.s} – ${b.e}${live?" · berlangsung ●":""}</div></div>${tbtn(b.n)}${alwaysOpen?"":`<button class="cnt" onclick="ov('${k}')">${op} tugas ${o?"▴":"▾"}</button>`}</div>${o?tl(b.n):""}
+ <div class="ed"><select onchange="up(${i},${j},'n',this.value)">${NAMES.map(x=>`<option ${x==b.n?"selected":""}>${esc(x)}</option>`).join("")}</select><input type="time" value="${b.s}" onchange="up(${i},${j},'s',this.value)"><input type="time" value="${b.e}" onchange="up(${i},${j},'e',this.value)"><button onclick="rm(${i},${j})">✕</button></div></div>`}
+function render(){
+ const now=new Date(),td=(now.getDay()+6)%7;
+ let tot=0,dn=0;sch.forEach((d,i)=>d.forEach((b,j)=>{tot++;if(done[i+"-"+j])dn++}));
+ const p=tot?Math.round(dn/tot*100):0,all=Object.values(todos).flat(),ot=all.filter(x=>!x.d).length;
+ $("sub").textContent=now.toLocaleDateString("id-ID",{weekday:"long",day:"numeric",month:"long",year:"numeric"});
+ let h=`<div class="stat">${dn}/${tot} blok selesai · ${ot} tugas terbuka · fokus ${ft(fs())}</div><div class="pb"><i style="width:${p}%"></i></div>`;
+ if(view=="today"){
+  if(td>4)h+=`<div class="day wk">Hari ini libur.<br>Sabtu &amp; Minggu bebas, nikmati!</div>`;
+  else h+=`<div class="day today"><div class="dh"><b>${DAYS[td]}</b><span class="tag">Hari ini</span></div>${sch[td].map((b,j)=>blk(td,j,b,true)).join("")}<div class="ed"><button onclick="ad(${td})">+ Tambah blok</button></div></div>`;
+ }
+ if(view=="week"){
+  h+=`<div class="act"><button id="be" onclick="ted()">${edit?"Selesai":"Edit jadwal"}</button> <button onclick="rs()">Reset centang</button></div>`;
+  DAYS.forEach((d,i)=>{h+=`<div class="day ${i==td?"today":""}"><div class="dh"><b>${d}</b>${i==td?'<span class="tag">Hari ini</span>':""}</div>${sch[i].map((b,j)=>blk(i,j,b,false)).join("")}<div class="ed"><button onclick="ad(${i})">+ Tambah blok</button></div></div>`});
+  h+=`<div class="day wk">Sabtu &amp; Minggu — libur</div>`;
+ }
+ if(view=="tasks"){
+  NAMES.forEach(n=>{const l=L(n),o=l.filter(x=>!x.d).length;h+=`<div class="sec" style="--c:${COL[n]}"><h2>${esc(n)}<span>${o} terbuka${l.some(x=>x.d)?` · <a href="#" onclick="cl(${NAMES.indexOf(n)});return false" style="color:var(--mu)">hapus selesai</a>`:""}</span></h2>${tl(n)}${nt(n)}</div>`});
+  h+=`<div class="sec sk"><h2>Skripsi cawpiaw</h2>${CH.map((c,i)=>`<label><input type="checkbox" ${chap[i]?"checked":""} onchange="tc(${i})">${c}</label>`).join("")}</div>`;
+  h+=`<div class="sec"><h2>Brand &amp; klien<span>${NAMES.length}</span></h2>${NAMES.map((n,i)=>`<div class="ti"><span>${esc(n)}</span><button class="x" style="font-size:15px;color:${cf===i?"#ff3b30":"var(--mu)"}" onclick="db(${i})">${cf===i?"Yakin hapus?":"Hapus"}</button></div>`).join("")}<div class="add" style="margin-bottom:12px"><input placeholder="Nama brand atau klien baru" onkeydown="if(event.key==='Enter')ab(this)"><button onclick="ab(this.previousElementSibling)">+</button></div></div>`;
+ }
+ if(view=="recap")h+=rc();$("app").innerHTML=h;tick();document.body.classList.toggle("edit",edit&&view!="tasks");
+ document.querySelectorAll(".nav button").forEach(b=>b.classList.toggle("on",b.dataset.v==view));
+ if(fb!==null){const e=document.querySelector(`input[data-bi="${fb}"]`);if(e)e.focus();fb=null}
+}
+function at(bi,el){const t=el.value.trim();if(!t)return;const m=t.match(/^(\d+)\s*[x×]\s*(.+)$/i)||t.match(/^(.+?)\s+(\d+)\s*[x×]$/i);let o={t,d:false};if(m){const a=/^\d+$/.test(m[1]);o={t:a?m[2]:m[1],n:+(a?m[1]:m[2]),c:0,l:{},mo:dk().slice(0,7),d:false}}L(NAMES[bi]).push(o);fb=bi;sv();render()}
+function tt(bi,i){const x=L(NAMES[bi])[i];x.d=!x.d;x.dt=x.d?dk():undefined;sv();render()}
+function tx(bi,i){L(NAMES[bi]).splice(i,1);sv();render()}
+function cl(bi){todos[NAMES[bi]]=L(NAMES[bi]).filter(x=>!x.d);sv();render()}
+const dk=()=>new Date().toLocaleDateString("sv");
+function wc(x){const d=new Date();d.setDate(d.getDate()-((d.getDay()+6)%7));const m=d.toLocaleDateString("sv");return Object.entries(x.l||{}).reduce((a,[k,v])=>k>=m?a+v:a,0)}
+function cn(bi,i,d){const x=L(NAMES[bi])[i],k=dk();x.l=x.l||{};if(d<0&&!(x.l[k]>0))return;x.c=Math.max(0,x.c+d);x.l[k]=(x.l[k]||0)+d;x.d=x.c>=x.n;sv();render()}
+let cf=null;
+function ab(el){const t=el.value.trim();if(!t||NAMES.includes(t))return;NAMES.push(t);sv();render()}
+function db(i){if(cf!==i){cf=i;render();return}const n=NAMES[i],nd={};sch.forEach((d,a)=>{let k=0;d.forEach((b,j)=>{if(b.n!==n){if(done[a+"-"+j])nd[a+"-"+k]=true;k++}})});NAMES.splice(i,1);delete todos[n];sch=sch.map(d=>d.filter(b=>b.n!==n));done=nd;open={};cf=null;sv();render()}
+
+const fd=d=>new Date(d+"T00:00").toLocaleDateString("id-ID",{day:"numeric",month:"short"});
+const mon=()=>{const d=new Date();d.setDate(d.getDate()-((d.getDay()+6)%7));return d.toLocaleDateString("sv")};
+const ft=t=>{const m=Math.round(t/60);return m>=60?Math.floor(m/60)+"j "+(m%60)+"m":m+"m"};
+const fs=()=>Object.values(focus).reduce((a,o)=>a+(o[dk()]||0),0);
+const fw=n=>Object.entries(focus[n]||{}).reduce((a,[k,v])=>k>=mon()?a+v:a,0);
+function tbtn(n){const bi=NAMES.indexOf(n),r=timer&&timer.n===n;return `<button class="cnt" style="${r?"color:var(--ac)":""}" onclick="tm(${bi})">${r?`■ <span class="tk" data-s="${timer.s}">00:00</span>`:"▶ Fokus"}</button>`}
+function tm(bi){const n=NAMES[bi];let same=false;if(timer){const el=Math.round((Date.now()-timer.s)/1000),k=dk();focus[timer.n]=focus[timer.n]||{};focus[timer.n][k]=(focus[timer.n][k]||0)+el;same=timer.n===n;timer=null}if(!same)timer={n:n,s:Date.now()};sv();render()}
+function tick(){document.querySelectorAll(".tk").forEach(e=>{const t=Math.floor((Date.now()-e.dataset.s)/1000);e.textContent=String(Math.floor(t/60)).padStart(2,"0")+":"+String(t%60).padStart(2,"0")})}
+setInterval(tick,1000);
+function nt(n){const bi=NAMES.indexOf(n),v=notes[n]||"",u=v.match(/https?:\/\/\S+/g)||[];return `<details class="nt" ${v?"open":""}><summary>Catatan &amp; tautan${v?" •":""}</summary><textarea rows="3" placeholder="Brief, link Drive, kalender konten…" onchange="sn(${bi},this.value)">${esc(v)}</textarea>${u.map(x=>`<a href="${esc(x)}" target="_blank" rel="noopener">${esc(x.replace(/^https?:\/\//,"").slice(0,42))}</a>`).join("")}</details>`}
+function sn(bi,v){notes[NAMES[bi]]=v;sv();render()}
+function rtxt(){const m=mon();let t="REKAP MINGGU "+fd(m)+" - "+fd(dk())+"\n";NAMES.forEach(n=>{let bt=0,bd=0;sch.forEach((d,i)=>d.forEach((b,j)=>{if(b.n===n){bt++;if(done[i+"-"+j])bd++}}));const l=L(n),dn=l.filter(x=>!x.n&&x.d&&x.dt>=m).length,op=l.filter(x=>!x.n&&!x.d).length;t+="\n"+n+"\n- Blok jadwal selesai: "+bd+"/"+bt+"\n- Tugas selesai minggu ini: "+dn+" (masih terbuka: "+op+")\n";l.filter(x=>x.n).forEach(x=>{t+="- "+x.t+": "+x.c+"/"+x.n+" bulan ini (minggu ini "+wc(x)+")\n"});t+="- Waktu fokus: "+ft(fw(n))+"\n"});return t}
+function rc(){return `<div class="sec"><h2>Rekap minggu ini</h2><pre id="rc">${esc(rtxt())}</pre><div class="act"><button onclick="cp('rc',this)">Salin rekap</button></div></div><div class="sec"><h2>Cadangan data</h2><div class="tm">Salin teks ini dan simpan di catatan atau Drive.</div><textarea id="bk" readonly rows="3">${esc(JSON.stringify({b:NAMES,s:sch,t:todos,c:chap,f:focus,n:notes}))}</textarea><div class="act"><button onclick="cp('bk',this)">Salin cadangan</button></div><div class="tm">Pulihkan dari cadangan (menimpa data saat ini):</div><textarea id="im" rows="3" placeholder="Tempel cadangan di sini"></textarea><div class="act"><button onclick="rp()">Pulihkan</button><span class="tm" id="ims"></span></div></div>`}
+function cp(id,b){const e=document.getElementById(id),t=e.value!==undefined&&e.tagName=="TEXTAREA"?e.value:e.textContent;try{navigator.clipboard.writeText(t).then(()=>b.textContent="Tersalin",()=>{e.select&&e.select()})}catch(x){e.select&&e.select()}}
+function rp(){try{const o=JSON.parse($("im").value);if(o.b){NAMES.length=0;o.b.forEach(x=>NAMES.push(x))}sch=o.s||sch;todos=o.t||todos;chap=o.c||chap;focus=o.f||focus;notes=o.n||notes;done={};sv();render();$("ims").textContent="Berhasil dipulihkan"}catch(e){$("ims").textContent="Format tidak valid"}}
+function tg(k){done[k]=!done[k];sv();render()}
+function tc(i){chap[i]=!chap[i];sv()}
+function ov(k){open[k]=!open[k];render()}
+function up(i,j,f,v){sch[i][j][f]=v;sv();render()}
+function rm(i,j){sch[i].splice(j,1);done={};sv();render()}
+function ad(i){if(!NAMES.length)return;sch[i].push({n:NAMES[0],s:"13:00",e:"17:00"});sv();render()}
+function ted(){edit=!edit;render()}
+function rs(){done={};sv();render()}
+document.querySelectorAll(".nav button").forEach(b=>b.onclick=()=>{view=b.dataset.v;scrollTo(0,0);render()});
+ld();render();setInterval(()=>{if(!document.activeElement||!["INPUT","TEXTAREA"].includes(document.activeElement.tagName))render()},60000);
+</script></body></html>
